@@ -13,9 +13,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import Header from 'components/Header';
-import Footer from 'components/Footer';
+
 import Input from 'components/Input';
 
 const AppWrapper = styled.div`
@@ -30,7 +28,9 @@ const AppWrapper = styled.div`
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      savedString: '',
+    };
   }
 
   render() {
@@ -39,7 +39,6 @@ export default class App extends Component {
         <Helmet titleTemplate="Dovenmuele Challenge">
           <meta name="description" content="A React.js Dovenmuele Challenge" />
         </Helmet>
-        <Header />
         <Input />
       </AppWrapper>
     );
