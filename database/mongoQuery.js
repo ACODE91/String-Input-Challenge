@@ -10,10 +10,15 @@ const stringSchema = new Schema({
 
 const StringModel = mongoose.model('String', stringSchema);
 
-const test = new StringModel({ input: 'test' });
-test.save(function(err) {
-  if (err) return handleError(err);
-  // saved!
+// const test = new StringModel({ input: 'test' });
+// test.save(function(err) {
+//   if (err) return handleError(err);
+//   // saved!
+// });
+
+const testQuery = StringModel.find({ input: 'test' }, (err, found) => {
+  if (err) return err;
+  console.log(found);
 });
 
 mongoose.connect('mongodb://localhost:27017/myApp').then(() => {
