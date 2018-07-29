@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
-import Axios from 'axios';
+import axios from 'axios';
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
 
@@ -44,7 +44,16 @@ export default class App extends Component {
   }
 
   handleStringSubmit(event) {
-    console.log('clicked ', event);
+    console.log('clicked ', this.state);
+    axios({
+      method: 'post',
+      url: '/saved',
+      data: {
+        input: this.state,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
   }
 
   render() {
@@ -54,7 +63,7 @@ export default class App extends Component {
           <meta name="description" content="A React.js Dovenmuele Challenge" />
         </Helmet>
         <Input
-          clickFn={this.handleStringSubmit}
+          clickFn={this.handleStringSubmit.bind(this)}
           typeFn={this.handleStringInput.bind(this)}
         />
       </AppWrapper>
