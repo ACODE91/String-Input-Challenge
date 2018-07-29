@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
-
+import Axios from 'axios';
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
 
@@ -31,6 +31,20 @@ export default class App extends Component {
     this.state = {
       savedString: '',
     };
+
+    this.handleStringSubmit.bind(this);
+    this.handleStringInput.bind(this);
+  }
+
+  handleStringInput(text) {
+    const typedString = text.target.value;
+    this.state.savedString = typedString;
+    this.setState();
+    console.log('our state is', this.state);
+  }
+
+  handleStringSubmit(event) {
+    console.log('clicked ', event);
   }
 
   render() {
@@ -39,7 +53,10 @@ export default class App extends Component {
         <Helmet titleTemplate="Dovenmuele Challenge">
           <meta name="description" content="A React.js Dovenmuele Challenge" />
         </Helmet>
-        <Input />
+        <Input
+          clickFn={this.handleStringSubmit}
+          typeFn={this.handleStringInput.bind(this)}
+        />
       </AppWrapper>
     );
   }

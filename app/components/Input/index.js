@@ -3,8 +3,20 @@ import React from 'react';
 function Input(props) {
   return (
     <div>
-      Input string: <input type="text" />
-      <input type="submit" value="Submit" />
+      Input string:{' '}
+      <input
+        type="text"
+        onChange={e => {
+          props.typeFn(e);
+        }}
+      />
+      <input
+        type="submit"
+        value="Submit"
+        onClick={e => {
+          props.clickFn(e);
+        }}
+      />
     </div>
   );
 }
