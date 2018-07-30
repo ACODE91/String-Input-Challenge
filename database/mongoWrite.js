@@ -12,7 +12,7 @@ const stringSchema = new Schema({
 const StringModel = mongoose.model('String', stringSchema);
 
 const writeString = function(str) {
- const newModel = new StringModel({ input: str });
+  const newModel = new StringModel({ input: str });
   newModel.save(err => {
     if (err) return err;
   });

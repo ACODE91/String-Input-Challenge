@@ -9,9 +9,9 @@ const mongoWrite = require('../database/mongoWrite.js');
 router.use(bodyParser.json());
 
 router.use((req, res, next) => {
-  if(req.method === 'POST') {
+  if (req.method === 'POST') {
     mongoWrite.write(req.body.input.savedString);
-    res.send('POST request to the homepage')
+    res.send('POST request to the homepage');
   }
   next();
 });

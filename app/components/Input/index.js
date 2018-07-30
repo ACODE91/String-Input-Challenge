@@ -11,7 +11,7 @@ function Input(props) {
         }}
       />
       <input
-        type="submit"
+        type="button"
         value="Submit"
         onClick={e => {
           props.clickFn(e);
