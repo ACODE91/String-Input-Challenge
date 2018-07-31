@@ -7,7 +7,7 @@ function Input(props) {
       <input
         type="text"
         onChange={e => {
-          props.typeFn(e);
+          props.typeFn(e.target.value);
         }}
       />
       <input

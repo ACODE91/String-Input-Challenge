@@ -7,6 +7,7 @@ import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
+import typeReducer from './typeReducer.js';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -37,6 +38,10 @@ export default function configureStore(initialState = {}, history) {
     fromJS(initialState),
     composeEnhancers(...enhancers),
   );
+
+  // store.dispatch({
+  //   type: 'TYPE_STRING',
+  // });
 
   // Extensions
   store.runSaga = sagaMiddleware.run;
