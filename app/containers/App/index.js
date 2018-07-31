@@ -44,21 +44,26 @@ class App extends Component {
     })
       .then(response => {
         this.setState({ strings: response.data });
-        console.log(this.state, 'from get response');
       })
       .catch(error => {
         console.log(error, 'from get error');
       });
   }
 
-  handleStringInput = text => {
-    const typedString = text.target.value;
-    this.state.savedString = typedString;
-    this.setState();
-  };
+  componentWillReceiveProps(nextProps) {
+    // You don't have to do this check first, but it can help prevent an unneeded render
+    if (nextProps.savedString !== this.state.savedString) {
+      this.setState({ savedString: nextProps.savedString });
+    }
+  }
+
+  // handleStringInput = text => {
+  //   const typedString = text.target.value;
+  //   this.state.savedString = typedString;
+  //   this.setState();
+  // };
 
   handleStringSubmit = event => {
-    console.log('clicked ', this.state);
     if (!this.state.savedString) {
       alert('Enter a string!');
     } else {
@@ -66,11 +71,10 @@ class App extends Component {
         method: 'post',
         url: '/saved',
         data: {
-          input: this.state,
+          input: this.state.savedString,
         },
       })
         .then(response => {
-          console.log(response, 'from success');
           axios({
             method: 'get',
             url: '/saved',
@@ -78,7 +82,6 @@ class App extends Component {
             .then(response => {
               this.setState({ strings: response.data, savedString: '' });
               alert('String saved!');
-              console.log(this.state, 'from get response');
             })
             .catch(error => {
               console.log(error, 'from get error');
@@ -91,7 +94,6 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.props, "app's props", this.state, 'changed state');
     return (
       <Router>
         <div>
@@ -127,19 +129,15 @@ class App extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  console.log(state._root.entries[3][1].savedString, 'this is state');
-  return { savedString: state._root.entries[3][1].savedString }
+  return { savedString: state._root.entries[3][1].savedString };
 };
 
-const mapActionsToProps = (dispatch, props) => {
-  console.log(props, 'this is map actions to props');
-  return bindActionCreators(
+const mapActionsToProps = (dispatch, props) => bindActionCreators(
     {
       onStringChange: typeString,
     },
     dispatch,
   );
-};
 
 export default connect(
   mapStateToProps,
