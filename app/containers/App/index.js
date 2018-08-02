@@ -18,6 +18,7 @@ import Display from '../../components/Display/Display.js';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { typeString } from '../../typeActions.js';
+import store from '../../configureStore';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -38,16 +39,8 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios({
-      method: 'get',
-      url: '/saved',
-    })
-      .then(response => {
-        this.setState({ strings: response.data });
-      })
-      .catch(error => {
-        console.log(error, 'from get error');
-      });
+    this.props.loadStrings();
+    console.log(this.state, 'after will mount')
   }
 
   componentWillReceiveProps(nextProps) {
@@ -94,6 +87,7 @@ class App extends Component {
   };
 
   render() {
+    console.log(this.state, 'from render');
     return (
       <Router>
         <div>
@@ -114,10 +108,10 @@ class App extends Component {
             path="/display"
             exact
             render={() => {
-              console.log(this.state.strings);
+              console.log(this.props.strings);
               return (
                 <div>
-                  <Display list={this.state.strings} />
+                  <Display list={this.props.strings} />
                 </div>
               );
             }}
@@ -129,12 +123,20 @@ class App extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  return { savedString: state._root.entries[3][1].savedString };
+  console.log(state, 'this is state');
+  return {
+    savedString: state._root.entries[3][1].savedString,
+    strings: state._root.entries[4][1].strings,
+  };
 };
 
-const mapActionsToProps = (dispatch, props) => bindActionCreators(
+const mapActionsToProps = (dispatch, props) =>
+  bindActionCreators(
     {
       onStringChange: typeString,
+      loadStrings: () => {
+        return { type: 'FETCH_STRINGS' };
+      },
     },
     dispatch,
   );

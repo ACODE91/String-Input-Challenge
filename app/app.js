@@ -51,11 +51,12 @@ const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
 
 const render = messages => {
+
   ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={store} >
       <LanguageProvider messages={messages}>
         <ConnectedRouter history={history}>
-          <App />
+          <App store={store}/>
         </ConnectedRouter>
       </LanguageProvider>
     </Provider>,

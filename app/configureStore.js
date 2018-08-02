@@ -8,6 +8,8 @@ import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
 import typeReducer from './typeReducer.js';
+import { fetchStringsWatcher } from './sagas';
+import logger from 'redux-logger';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -15,7 +17,7 @@ export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares = [sagaMiddleware, routerMiddleware(history)];
+  const middlewares = [sagaMiddleware, routerMiddleware(history), logger];
 
   const enhancers = [applyMiddleware(...middlewares)];
 
@@ -39,12 +41,15 @@ export default function configureStore(initialState = {}, history) {
     composeEnhancers(...enhancers),
   );
 
-  // store.dispatch({
-  //   type: 'TYPE_STRING',
-  // });
+  sagaMiddleware.run(fetchStringsWatcher);
 
+  // window.dispatcher = {
+  //   fetchStrings: () => {
+  //     store.dispatch({ type: 'FETCH_STRINGS' });
+  //   },
+  // };
   // Extensions
-  store.runSaga = sagaMiddleware.run;
+  // store.runSaga = sagaMiddleware.run;
   store.injectedReducers = {}; // Reducer registry
   store.injectedSagas = {}; // Saga registry
 
