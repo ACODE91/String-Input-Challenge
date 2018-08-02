@@ -18,15 +18,20 @@ import Display from '../../components/Display/Display.js';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { typeString } from '../../typeActions.js';
-import store from '../../configureStore';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
   margin: 0 auto;
   display: flex;
   min-height: 100%;
-  padding: 0 16px;
+  padding: 200px;
   flex-direction: column;
+
+  ${({ active }) =>
+    active &&
+    `
+  border: 5px solid blue;
+`};
 `;
 
 class App extends Component {
@@ -35,12 +40,13 @@ class App extends Component {
     this.state = {
       savedString: '',
       strings: [],
+      active: false,
+      submitted: [],
     };
   }
 
   componentWillMount() {
     this.props.loadStrings();
-    console.log(this.state, 'after will mount')
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,44 +56,15 @@ class App extends Component {
     }
   }
 
-  // handleStringInput = text => {
-  //   const typedString = text.target.value;
-  //   this.state.savedString = typedString;
-  //   this.setState();
-  // };
-
-  handleStringSubmit = event => {
-    if (!this.state.savedString) {
-      alert('Enter a string!');
+  handleActive = () => {
+    if (!this.state.active) {
+      this.setState({ active: true });
     } else {
-      axios({
-        method: 'post',
-        url: '/saved',
-        data: {
-          input: this.state.savedString,
-        },
-      })
-        .then(response => {
-          axios({
-            method: 'get',
-            url: '/saved',
-          })
-            .then(response => {
-              this.setState({ strings: response.data, savedString: '' });
-              alert('String saved!');
-            })
-            .catch(error => {
-              console.log(error, 'from get error');
-            });
-        })
-        .catch(error => {
-          console.log(error, 'from error');
-        });
+      this.setState({ active: false });
     }
   };
 
   render() {
-    console.log(this.state, 'from render');
     return (
       <Router>
         <div>
@@ -107,14 +84,16 @@ class App extends Component {
           <Route
             path="/display"
             exact
-            render={() => {
-              console.log(this.props.strings);
-              return (
-                <div>
+            render={() => (
+              <div>
+                <AppWrapper
+                  active={this.state.active}
+                  onClick={this.handleActive}
+                >
                   <Display list={this.props.strings} />
-                </div>
-              );
-            }}
+                </AppWrapper>
+              </div>
+            )}
           />
         </div>
       </Router>
@@ -122,21 +101,16 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  console.log(state, 'this is state');
-  return {
-    savedString: state._root.entries[3][1].savedString,
-    strings: state._root.entries[4][1].strings,
-  };
-};
+const mapStateToProps = (state, props) => ({
+  savedString: state._root.entries[3][1].savedString,
+  strings: state._root.entries[4][1].strings,
+});
 
 const mapActionsToProps = (dispatch, props) =>
   bindActionCreators(
     {
       onStringChange: typeString,
-      loadStrings: () => {
-        return { type: 'FETCH_STRINGS' };
-      },
+      loadStrings: () => ({ type: 'FETCH_STRINGS' }),
     },
     dispatch,
   );

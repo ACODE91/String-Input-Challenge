@@ -25,6 +25,12 @@ const makeSelectRepos = () =>
 const makeSelectLocation = () =>
   createSelector(selectRoute, routeState => routeState.get('location').toJS());
 
+// const stringSelector = state => state.strings
+
+// const getStrings = (strs) => {
+//   createSelector(strs)
+// } 
+
 export {
   selectGlobal,
   makeSelectCurrentUser,
